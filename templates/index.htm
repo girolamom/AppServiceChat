@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure Chatbot</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: auto; }
+        .chat { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto; }
+        .user { color: blue; margin: 5px 0; }
+        .bot { color: green; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h2>Chatbot Azure</h2>
+    <div class="chat" id="chat"></div>
+    <input type="text" id="message" style="width:80%">
+    <button onclick="sendMessage()">Invia</button>
+
+<script>
+async function sendMessage() {
+    const input = document.getElementById("message");
+    const chat = document.getElementById("chat");
+    const text = input.value;
+
+    chat.innerHTML += `<div class="user"><b>Tu:</b> ${text}</div>`;
+    input.value = "";
+
+    const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+    });
+
+    const data = await response.json();
+    chat.innerHTML += `<div class="bot"><b>Bot:</b> ${data.reply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
